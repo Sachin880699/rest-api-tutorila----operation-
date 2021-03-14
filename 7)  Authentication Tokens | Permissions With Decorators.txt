@@ -1,0 +1,68 @@
+============= settings.py===
+
+add this in install app
+
+    'rest_framework.authtoken'
+
+
+
+add thisn in rest framework code in settings.py 
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication'   #============only this one
+        
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+	'rest_framework.permissions.IsAuthenticated', #=============and this one for permission
+    ]
+}
+
+
+==================== firstapp/api/views.py =================
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+
+@api_view()
+# @permission_classes([AllowAny]) ============just comment this id
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+=============================================================
+
+got to postman
+
+put there address
+
+http://localhost:8000/first
+
+
+select GET ==>>> Header
+
+keys		      value
+
+Authorization         Token 5c7979f2e526c65598f679110778760c40b1c67e
+
+
+
+
+
+
+
+
+you will see  
+{"msg":"This is message"}
+
+
+
+
+

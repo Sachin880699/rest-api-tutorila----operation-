@@ -1,0 +1,45 @@
+========== Views.py ===============
+
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from.serializer import *
+from firstapp.models import *
+
+@api_view()
+@permission_classes([AllowAny])
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+class CarSpecsViewset(viewsets.ModelViewSet):
+    serializer_class = CarSpecsSerializer
+    def get_queryset(self):
+        car_speces = CarSpecs.objects.all()
+        return car_speces
+
+#--------------------------------------- changes only from here
+
+    def retrieve(self,request, *args, **kwargs):
+        params = kwargs
+        print(params['pk'])
+        params_list = params['pk'].split('-')
+        cars = CarSpecs.objects.filter(car_brand= params_list[0],car_model=params_list[1])
+        serializer = CarSpecsSerializer(cars,many = True)
+        return Response(serializer.data)
+
+
+======================================================================
+
+browser madhe
+
+
+http://localhost:8000/car-spaces/Alto-AltoMUi6F-dfsdf/
+http://localhost:8000/car-spaces/Alto-AltoMUi6F-fieldname/
+
+
+
+mhanje tya jya navane search karaycha ahe te dash karun pudhe
+

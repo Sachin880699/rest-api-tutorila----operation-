@@ -1,0 +1,17 @@
+
+browser madhe
+
+http://localhost:8000/first/?id=123
+
+?id=123
+
+Output = <QueryDict: {'id': ['123']}>
+
+print(request.query_params['id'])         >>>>>  output   123 
+======== in views.py file print 
+
+
+print(request.query_params)
+
+
+

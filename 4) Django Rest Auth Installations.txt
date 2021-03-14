@@ -1,0 +1,33 @@
+1 )  pip install django-rest-auth
+
+
+================ settings.py====
+
+INSTALLED_APPS = (
+    'rest_auth'
+
+    django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+)
+
+SITE_ID = 1
+
+================= main /  urls.py=====
+path('api-auth/', include('rest_framework.urls')),
+path('rest-auth/', include('rest_auth.urls')),
+path('rest-auth/', include('rest_auth.urls')),
+path('rest-auth/registration/', include('rest_auth.registration.urls'))
+
+
+
+
+
+and open admin panel you will notice 
+
+
+
+
+
+

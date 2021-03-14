@@ -1,0 +1,47 @@
+
+1 ) python mananage.py startapp firstapp
+
+inside app create api folder
+ 	
+	in that create 
+	1 ) Views.py
+	2 ) urls.py
+
+============== firstapp/api/views.py====
+
+
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+
+@api_view()
+@permission_classes([AllowAny])
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+
+================ firstapp/api/urls.py =======
+
+from django.conf.urls import url
+from.views import *
+
+urlpatterns = [
+    url('first',firstfunction)
+]
+
+================== settings.py =======
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

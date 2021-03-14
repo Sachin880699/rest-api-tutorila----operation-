@@ -1,0 +1,50 @@
+=================== for delete views.py==========
+
+
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from.serializer import *
+from firstapp.models import *
+
+@api_view()
+@permission_classes([AllowAny])
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+class CarSpecsViewset(viewsets.ModelViewSet):
+    serializer_class = CarSpecsSerializer
+    def get_queryset(self):
+        car_speces = CarSpecs.objects.all()
+        return car_speces
+
+    def retrieve(self,request, *args, **kwargs):
+        params = kwargs
+        print(params['pk'])
+        params_list = params['pk'].split('-')
+        cars = CarSpecs.objects.filter(car_brand= params_list[0],car_model=params_list[1])
+        serializer = CarSpecsSerializer(cars,many = True)
+        return Response(serializer.data)
+    
+    def create(self, request , *args , **kwargs):
+        car_data = request.data
+        new_car = CarSpecs.objects.create(car_brand=car_data['car_brand'],car_model=car_data['car_model'],production_year=car_data['production_year'],
+        car_body=car_data['car_body'],engine_type=car_data['engine_type'])
+        new_car.save()
+        serializer = CarSpecsSerializer(new_car)
+        return Response(serializer.data)
+
+#--------------------------- for delete ==========
+
+    def destroy(self, request , *args , **kwargs):
+        car = self.get_object()
+        car.delete()
+        return Response({"message":"Item Has Been Deleted"})
+
+
+
+=======================================================================
+

@@ -1,0 +1,65 @@
+================ models.py ===============
+
+from django.db import models
+
+class CarSpecs(models.Model):
+    car_brand = models.CharField(max_length=100)
+    car_model = models.CharField(max_length=100)
+    production_year = models.CharField(max_length=10)
+    car_body = models.CharField(max_length=100)
+    engine_type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.car_brand
+
+
+============= serializer.py =================
+
+from rest_framework import serializers
+from firstapp.models import *
+
+class CarSpecsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarSpecs
+        fields = '__all__'
+
+================= views.py ================
+
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from.serializer import *
+from firstapp.models import *
+
+@api_view()
+@permission_classes([AllowAny])
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+class CarSpecsViewset(viewsets.ModelViewSet):
+    serializer_class = CarSpecsSerializer
+    def get_queryset(self):
+        car_speces = CarSpecs.objects.all()
+        return car_speces
+
+============================== urls.py =======================
+
+
+from django.conf.urls import url , include
+from.views import *
+from rest_framework.routers import DefaultRouter
+from .views import CarSpecsViewset
+
+router = DefaultRouter()
+router.register('car_spaces',CarSpecsViewset,basename='car-spaces')
+urlpatterns = router.urls
+
+urlpatterns = [
+    url('first',firstfunction),
+    url("",include(router.urls))
+]
+
+

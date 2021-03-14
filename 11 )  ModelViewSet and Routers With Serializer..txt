@@ -1,0 +1,54 @@
+======================= views.py=====
+
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from.serializer import *
+from firstapp.models import *
+
+@api_view()
+@permission_classes([AllowAny])
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+class CarSpecsViewset(viewsets.ModelViewSet):
+    serializer_class = CarSpecsSerializer
+    def get_queryset(self):
+        car_speces = CarSpecs.objects.all()
+        return car_speces
+
+============= settings.py ==================
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.AllowAny', #============= only change this one
+
+    ]
+}
+
+============  firstapp / api / urls.py ========
+from django.conf.urls import url , include
+from.views import *
+from rest_framework.routers import DefaultRouter #====add this one
+from .views import CarSpecsViewset #========= add this one
+
+router = DefaultRouter() #=== add this one
+
+router.register('car-spaces',CarSpecsViewset,basename='car-spaces') # === this one
+urlpatterns = router.urls  # === add this one
+
+urlpatterns = [
+    url('first',firstfunction),
+    url("",include(router.urls))    # ==== add this one
+
