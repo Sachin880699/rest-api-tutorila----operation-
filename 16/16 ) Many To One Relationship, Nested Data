@@ -1,0 +1,62 @@
+================ models.py=======================
+from django.db import models
+
+class CarPlan(models.Model):
+    plan_name = models.CharField(max_length=20)
+    years_of_plan = models.PositiveIntegerField(default = 1)
+    finance_plan = models.CharField(max_length=20,default='unavailable')
+
+    def __str__(self):
+        return self.plan_name
+
+
+class CarSpace(models.Model):
+    car_plan = models.ForeignKey(CarPlan,on_delete=models.SET_NULL,null=True)
+    car_brand = models.CharField(max_length=100)
+    car_model = models.CharField(max_length=100)
+    production_year = models.CharField(max_length=10)
+    car_body = models.CharField(max_length=100)
+    engine_type = models.CharField(max_length=50)
+
+    
+==================== views.py =================================
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from.serializer import *
+from.models import *
+
+@api_view()
+def firstfunction(request):
+    return Response({"msg":"This is message"})
+
+
+class CarSpaceViewset(viewsets.ModelViewSet):
+    serializer_class = CarSpaceSerializer
+    def get_queryset(self):
+        car_specs = CarSpace.objects.all()
+        return car_specs
+    
+    # def retrieve(self,request, *args, **kwargs):
+    #     params = kwargs
+    #     print(params['pk'])
+    #     params_list = params['pk'].split('-')
+    #     cars = CarSpace.objects.filter(car_brand= params_list[0],car_model=params_list[1])
+    #     serializer = CarSpaceSerializer(cars,many = True)
+    #     return Response(serializer.data)
+#=============================================================change from here to ==================
+    def create(self , request , *args , **kwargs):
+        car_data = request.data
+        new_plan = CarPlan.objects.get(id = car_data['car_plan'])
+        new_car = CarSpace.objects.create(car_plan = new_plan , car_brand=car_data['car_brand'],car_model=car_data['car_model'],production_year=car_data['production_year'],
+        car_body=car_data['car_body'],engine_type=car_data['engine_type'])
+        new_car.save()
+        serializer = CarSpaceSerializer(new_car)
+        return Response(serializer.data)
+  #=============================================================here to ================== 
+    # def destroy(self , request , *args , **kwargs):
+    #     car = self.get_object()
+    #     car.delete()
+    #     return Response({"message":"Item Has Been Deleted"})
+        
